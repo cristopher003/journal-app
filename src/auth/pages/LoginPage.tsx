@@ -3,13 +3,16 @@ import { Button, Grid, Link, TextField, Typography } from "@mui/material"
 import { Link as RouterLink } from "react-router-dom";
 import { AuthLayout } from "../layout/AuthLayout";
 import { useForm } from "../../hooks/useForm";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { checkingAuthentication,startGoogleSignIn } from "../../store/auth/thunks";
+import { useMemo } from "react";
 
 
 
 export const LoginPage = () => {
 
+
+     const {status} = useSelector(state => state.auth);
 
     const dispatch = useDispatch();
 
@@ -17,6 +20,8 @@ export const LoginPage = () => {
         email: 'cristrsolis@hotmail.com',
         password: '12456'
     });
+
+    const isAuthenticated = useMemo(() => status === 'cheking', [status]);
  
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -25,7 +30,6 @@ export const LoginPage = () => {
     }
 
     const onGoogleSignIn=()=>{
-        console.log('asasasasa')
         dispatch(startGoogleSignIn());
     }
 
@@ -44,10 +48,20 @@ export const LoginPage = () => {
 
                     <Grid container spacing={2} sx={{ mb: 2 }}>
                         <Grid item xs={12} sm={6}>
-                            <Button  type="submit" variant="contained" color="primary" fullWidth> Login </Button>
+                            <Button
+                            disabled={isAuthenticated} 
+                            type="submit" 
+                            variant="contained"
+                            color="primary" 
+                            fullWidth> Login </Button>
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <Button onClick={onGoogleSignIn} variant="contained" color="primary" fullWidth>
+                            <Button 
+                            disabled={isAuthenticated} 
+                            onClick={onGoogleSignIn}
+                            variant="contained" 
+                            color="primary" 
+                            fullWidth>
                                 <Google />
                                 <Typography sx={{ ml: 1 }}>Google</Typography>
                             </Button>

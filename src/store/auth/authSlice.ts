@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 export enum authState{
-    "cheking",
-   "notAuthenticated",
-    "authenticated"
+    cheking="cheking",
+    notAuthenticated="notAuthenticated",
+    authenticated="authenticated"
 }
 
 export interface AuthState {
@@ -28,11 +28,22 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    login: (state,action) => {
-    
+    login: (state,{ payload }) => {
+    state.status=authState.authenticated;
+    state.uid=payload.uid;
+    state.email=payload.email;
+    state.photoURL=payload.photoURL;
+    state.displayName=payload.displayName;
+  
     }, 
-    logout: (state,payload) => {
-    
+
+   logout: (state,{payload}) => {
+    state.status=authState.notAuthenticated;
+    state.uid="";
+    state.email="";
+    state.photoURL="";
+    state.displayName="";
+    state.errorMessage=payload;
     },
     checkingCredentials: (state) => {
         state.status=authState.cheking

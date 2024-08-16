@@ -1,5 +1,6 @@
-import { AppDispatch, RootState } from "../store";
-import { checkingCredentials } from "./authSlice"
+import { singInWithGoogle } from "../../firebase/providers";
+import { AppDispatch } from "../store";
+import { checkingCredentials, login, logout } from "./authSlice"
 
 
 export const checkingAuthentication = (email: string, password: string) => {
@@ -10,6 +11,13 @@ export const checkingAuthentication = (email: string, password: string) => {
 
 export const startGoogleSignIn = () => {
     return async (dispatch: AppDispatch) => {
-        dispatch(checkingCredentials());
+       
+    dispatch(checkingCredentials());
+
+    const result =   await singInWithGoogle();
+    if (!result.ok)  return dispatch(logout(result.errorMessage));
+    
+    dispatch (login(result));
+    
     };
 };
